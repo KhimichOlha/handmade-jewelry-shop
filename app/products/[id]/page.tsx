@@ -53,9 +53,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
           <p className="mt-6 text-3xl font-bold">{product.price} грн</p>
 
-          <button className="mt-6 rounded-lg bg-black px-6 py-3 text-white">
-            Додати в кошик
-          </button>
+          <form action="#">
+            <button className="mt-6 rounded-lg bg-black px-6 py-3 text-white">
+              Додати в кошик
+            </button>
+          </form>
         </div>
       </div>
     </main>
