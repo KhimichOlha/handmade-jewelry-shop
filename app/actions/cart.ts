@@ -1,12 +1,20 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
 export async function addToCart(productId: string) {
-  const user = await prisma.user.findFirst();
+  let user = await prisma.user.findFirst();
 
   if (!user) {
-    throw new Error("Користувача не знайдено");
+    user = await prisma.user.create({
+      data: {
+        name: "Тестовий користувач",
+        email: "test@test.com",
+        password: "123456",
+        role: "USER",
+      },
+    });
   }
 
   let cart = await prisma.cart.findUnique({
@@ -48,4 +56,6 @@ export async function addToCart(productId: string) {
       },
     });
   }
+
+  redirect("/cart");
 }

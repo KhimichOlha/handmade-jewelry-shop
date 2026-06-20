@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { addReview } from "@/app/actions/review";
+import { addToCart } from "@/app/actions/cart";
 
 type ProductPageProps = {
   params: Promise<{
@@ -15,6 +17,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
     where: { id },
     include: {
       category: true,
+      reviews: {
+        include: {
+          user: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
     },
   });
 
@@ -53,13 +63,61 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
           <p className="mt-6 text-3xl font-bold">{product.price} грн</p>
 
-          <form action="#">
+          <form
+            action={async () => {
+              "use server";
+              await addToCart(product.id);
+            }}
+          >
             <button className="mt-6 rounded-lg bg-black px-6 py-3 text-white">
               Додати в кошик
             </button>
           </form>
         </div>
       </div>
+
+      <section className="mt-12">
+        <h2 className="text-2xl font-bold">Відгуки</h2>
+
+        <form action={addReview} className="mt-4 flex flex-col gap-3">
+          <input type="hidden" name="productId" value={product.id} />
+
+          <select name="rating" className="border p-2">
+            <option value="5">5 ⭐</option>
+            <option value="4">4 ⭐</option>
+            <option value="3">3 ⭐</option>
+            <option value="2">2 ⭐</option>
+            <option value="1">1 ⭐</option>
+          </select>
+
+          <textarea
+            name="comment"
+            placeholder="Ваш відгук"
+            className="border p-3"
+            required
+          />
+
+          <button className="rounded bg-black px-4 py-2 text-white">
+            Додати відгук
+          </button>
+        </form>
+
+        <div className="mt-6 space-y-4">
+          {product.reviews.length === 0 ? (
+            <p className="text-gray-600">Відгуків поки немає.</p>
+          ) : (
+            product.reviews.map((review) => (
+              <div key={review.id} className="rounded border p-3">
+                <p>
+                  <b>{review.user.name}</b>
+                </p>
+                <p>Оцінка: {review.rating} ⭐</p>
+                <p>{review.comment}</p>
+              </div>
+            ))
+          )}
+        </div>
+      </section>
     </main>
   );
 }
