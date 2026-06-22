@@ -5,6 +5,18 @@ import { writeFile } from "fs/promises";
 import { v4 as uuid } from "uuid";
 import path from "path";
 
+type ProductType = {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  material: string;
+  imageUrl: string;
+  stock: number;
+  createdAt: Date;
+  categoryId: number;
+};
+
 async function saveImage(formData: FormData) {
   "use server";
 
@@ -85,7 +97,7 @@ async function deleteProduct(formData: FormData) {
 }
 
 export default async function AdminProductsPage() {
-  const products = await prisma.product.findMany({
+  const products: ProductType[] = await prisma.product.findMany({
     orderBy: {
       createdAt: "desc",
     },
