@@ -1,6 +1,19 @@
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
+type CartItemWithProduct = {
+  id: string;
+  cartId: string;
+  productId: string;
+  quantity: number;
+  product: {
+    id: string;
+    title: string;
+    price: number;
+    [key: string]: any;
+  };
+};
+
 async function createOrder(formData: FormData) {
   "use server";
 
@@ -32,9 +45,12 @@ async function createOrder(formData: FormData) {
     redirect("/cart");
   }
 
-  const totalPrice = cart.items.reduce((sum, item) => {
-    return sum + item.product.price * item.quantity;
-  }, 0);
+  const totalPrice = cart.items.reduce(
+    (sum: number, item: CartItemWithProduct) => {
+      return sum + item.product.price * item.quantity;
+    },
+    0,
+  );
 
   const fullAddress = `${city}, ${address}. Коментар: ${comment}`;
 
