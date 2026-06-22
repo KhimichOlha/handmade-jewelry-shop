@@ -1,6 +1,18 @@
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/ProductCard";
 
+type ProductType = {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  material: string;
+  imageUrl: string;
+  stock: number;
+  createdAt: Date;
+  categoryId: number;
+};
+
 type SearchPageProps = {
   searchParams: Promise<{
     q?: string;
@@ -10,7 +22,7 @@ type SearchPageProps = {
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const { q } = await searchParams;
 
-  const products = await prisma.product.findMany({
+  const products: ProductType[] = await prisma.product.findMany({
     where: q
       ? {
           title: {
@@ -40,7 +52,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       </form>
 
       <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {products.map((product) => (
+        {products.map((product: ProductType) => (
           <ProductCard
             key={product.id}
             id={product.id}
