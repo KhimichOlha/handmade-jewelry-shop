@@ -10,6 +10,21 @@ type ProductPageProps = {
   }>;
 };
 
+type ReviewType = {
+  id: string;
+  rating: number;
+  comment: string;
+  createdAt: Date;
+  userId: string;
+  productId: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    [key: string]: any;
+  };
+};
+
 export default async function ProductPage({ params }: ProductPageProps) {
   const { id } = await params;
 
@@ -114,7 +129,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           {product.reviews.length === 0 ? (
             <p className="text-gray-600">Відгуків поки немає.</p>
           ) : (
-            product.reviews.map((review) => (
+            product.reviews.map((review: ReviewType) => (
               <div key={review.id} className="rounded-xl border p-4">
                 <p>
                   <b>{review.user.name}</b>
