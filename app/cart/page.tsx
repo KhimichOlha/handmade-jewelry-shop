@@ -55,7 +55,7 @@ export default async function CartPage() {
       ) : (
         <>
           <div className="mt-8 space-y-4">
-            {cart.items.map((item) => (
+            {cart.items.map((item: CartItemWithProduct) => (
               <div
                 key={item.id}
                 className="flex items-center justify-between rounded-2xl border bg-white p-5 shadow-sm"
