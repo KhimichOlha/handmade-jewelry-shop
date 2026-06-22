@@ -28,7 +28,7 @@ export default async function CartPage() {
 
   const total =
     cart?.items.reduce(
-      (sum, item) => sum + item.product.price * item.quantity,
+      (sum: number, item) => sum + item.product.price * item.quantity,
       0,
     ) || 0;
 
