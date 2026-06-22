@@ -1,7 +1,23 @@
 import { prisma } from "@/lib/prisma";
 import { updateOrderStatus } from "@/app/actions/order";
+
+type OrderWithRelationsLocal = {
+  id: string;
+  createdAt: Date;
+  totalPrice: number;
+  status: string;
+  address: string;
+  phone: string;
+  userId: string;
+  user: { id: string; name: string; email: string };
+  items: {
+    id: string;
+    product: { id: string; title: string };
+    quantity: number;
+  }[];
+};
 export default async function OrdersPage() {
-  const orders = await prisma.order.findMany({
+  const orders: OrderWithRelationsLocal[] = await prisma.order.findMany({
     include: {
       user: true,
       items: {
