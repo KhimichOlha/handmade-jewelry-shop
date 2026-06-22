@@ -1,6 +1,19 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 
+type CartItemWithProduct = {
+  id: string;
+  cartId: string;
+  productId: string;
+  quantity: number;
+  product: {
+    id: string;
+    title: string;
+    price: number;
+    [key: string]: any;
+  };
+};
+
 export default async function CartPage() {
   const user = await prisma.user.findFirst();
 
@@ -28,7 +41,8 @@ export default async function CartPage() {
 
   const total =
     cart?.items.reduce(
-      (sum: number, item) => sum + item.product.price * item.quantity,
+      (sum: number, item: CartItemWithProduct) =>
+        sum + item.product.price * item.quantity,
       0,
     ) || 0;
 
