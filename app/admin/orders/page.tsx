@@ -1,8 +1,16 @@
 import { prisma } from "@/lib/prisma";
 import { updateOrderStatus } from "@/app/actions/order";
+import type { Prisma } from "@prisma/client";
+
+type OrderWithRelations = Prisma.OrderGetPayload<{
+  include: {
+    user: true;
+    items: { include: { product: true } };
+  };
+}>;
 
 export default async function OrdersPage() {
-  const orders = await prisma.order.findMany({
+  const orders: OrderWithRelations[] = await prisma.order.findMany({
     include: {
       user: true,
       items: {
