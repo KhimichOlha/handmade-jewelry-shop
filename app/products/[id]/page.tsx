@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { addReview } from "@/app/actions/review";
 import { addToCart } from "@/app/actions/cart";
+import { addReview } from "@/app/actions/review";
 
 type ProductPageProps = {
   params: Promise<{
@@ -33,35 +33,43 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-8 py-10">
-      <Link href="/products" className="text-sm text-gray-600">
+    <main className="mx-auto max-w-6xl px-8 py-10">
+      <Link
+        href="/products"
+        className="text-sm text-gray-600 hover:text-pink-600"
+      >
         ← Назад до каталогу
       </Link>
 
-      <div className="mt-8 grid gap-8 md:grid-cols-2">
+      <div className="mt-8 grid gap-10 md:grid-cols-2">
         <img
           src={product.imageUrl}
           alt={product.title}
-          className="h-96 w-full rounded-xl bg-gray-100 object-cover"
+          className="h-[450px] w-full rounded-2xl bg-white object-cover shadow"
         />
 
-        <div>
+        <div className="rounded-2xl bg-white p-8 shadow">
           <h1 className="text-4xl font-bold">{product.title}</h1>
+
           <p className="mt-4 text-gray-700">{product.description}</p>
 
-          <p className="mt-4">
-            <b>Матеріал:</b> {product.material}
-          </p>
+          <div className="mt-6 space-y-2 text-gray-700">
+            <p>
+              <b>Матеріал:</b> {product.material}
+            </p>
 
-          <p className="mt-2">
-            <b>Категорія:</b> {product.category.name}
-          </p>
+            <p>
+              <b>Категорія:</b> {product.category.name}
+            </p>
 
-          <p className="mt-2">
-            <b>Кількість:</b> {product.stock}
-          </p>
+            <p>
+              <b>Кількість на складі:</b> {product.stock}
+            </p>
+          </div>
 
-          <p className="mt-6 text-3xl font-bold">{product.price} грн</p>
+          <p className="mt-6 text-4xl font-bold text-pink-600">
+            {product.price} грн
+          </p>
 
           <form
             action={async () => {
@@ -69,20 +77,20 @@ export default async function ProductPage({ params }: ProductPageProps) {
               await addToCart(product.id);
             }}
           >
-            <button className="mt-6 rounded-lg bg-black px-6 py-3 text-white">
+            <button className="mt-6 w-full rounded-xl bg-pink-600 px-6 py-4 text-lg font-semibold text-white hover:bg-pink-700">
               Додати в кошик
             </button>
           </form>
         </div>
       </div>
 
-      <section className="mt-12">
+      <section className="mt-12 rounded-2xl bg-white p-8 shadow">
         <h2 className="text-2xl font-bold">Відгуки</h2>
 
-        <form action={addReview} className="mt-4 flex flex-col gap-3">
+        <form action={addReview} className="mt-5 flex flex-col gap-3">
           <input type="hidden" name="productId" value={product.id} />
 
-          <select name="rating" className="border p-2">
+          <select name="rating" className="rounded-lg border p-3">
             <option value="5">5 ⭐</option>
             <option value="4">4 ⭐</option>
             <option value="3">3 ⭐</option>
@@ -93,11 +101,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <textarea
             name="comment"
             placeholder="Ваш відгук"
-            className="border p-3"
+            className="rounded-lg border p-3"
             required
           />
 
-          <button className="rounded bg-black px-4 py-2 text-white">
+          <button className="rounded-xl bg-black px-4 py-3 text-white">
             Додати відгук
           </button>
         </form>
@@ -107,7 +115,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <p className="text-gray-600">Відгуків поки немає.</p>
           ) : (
             product.reviews.map((review) => (
-              <div key={review.id} className="rounded border p-3">
+              <div key={review.id} className="rounded-xl border p-4">
                 <p>
                   <b>{review.user.name}</b>
                 </p>
