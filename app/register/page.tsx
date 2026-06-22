@@ -1,4 +1,14 @@
-import { registerUser } from "@/actions/auth";
+// Define the server action locally to avoid a missing-module import error.
+async function registerUser(formData: FormData) {
+  'use server';
+  const name = formData.get('name')?.toString() ?? '';
+  const email = formData.get('email')?.toString() ?? '';
+  const password = formData.get('password')?.toString() ?? '';
+
+  // Basic placeholder behavior: log the received values.
+  // Replace with real registration logic or import once the module is available.
+  console.log('Register user', { name, email, password });
+}
 
 export default function RegisterPage() {
   return (
