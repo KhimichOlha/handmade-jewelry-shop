@@ -1,8 +1,20 @@
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/ProductCard";
 
+type ProductType = {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  material: string;
+  imageUrl: string;
+  stock: number;
+  createdAt: Date;
+  categoryId: number;
+};
+
 export default async function ProductsPage() {
-  const products = await prisma.product.findMany({
+  const products: ProductType[] = await prisma.product.findMany({
     orderBy: {
       createdAt: "desc",
     },
@@ -19,7 +31,7 @@ export default async function ProductsPage() {
       </div>
 
       <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {products.map((product) => (
+        {products.map((product: ProductType) => (
           <ProductCard
             key={product.id}
             id={product.id}
